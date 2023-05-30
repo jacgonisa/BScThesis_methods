@@ -35,6 +35,10 @@ samtools sort -o IP.bam IP.sam
 rm IP.sam
 samtools index IP.bam
 
+#(for getting non-mapped reads and check contamination)
+samtools view -f 4 INPUT.bam > unmapped.sam
+samtools view -f 4 IP.bam > unmapped.sam
+
 # Convert BAM to BED and peak calling
 bedtools bamtobed -i IP.bam > IP.bed
 cd ../INPUT
