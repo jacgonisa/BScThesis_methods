@@ -1,41 +1,41 @@
-regions <- read.table("H3K27me3.txt", header = F)
+#Continue from 03, with the output of sorting clusters
 
-CLUSTER1_noskip=read.table("../06ChIP_klebs/NOSKIPcluster1.txt", header = T)
+regions <- read.table("3sorted_clusters.txt", header = F)
+cluster1 <- regions[regions$V13 == "C1", ]
+cluster2 <- regions[regions$V13 == "C2", ]
 
+#Analyze mean FPKM in cluster 1
+colnames(cluster1)[1]="seqnames"
+colnames(cluster1)[2]="start"
+colnames(cluster1)[3]="end"
+cluster1_df_genes= merge(cluster1, df_genes, by=c("start","end","seqnames") )
 
-colnames(CLUSTER1_noskip)[1]="seqnames"
-colnames(CLUSTER1_noskip)[2]="start"
-colnames(CLUSTER1_noskip)[3]="end"
-CLUSTER1_noskip_df_genes= merge(CLUSTER1_noskip, df_genes, by=c("start","end","seqnames") )
+cluster1_df_genes_tx =merge(cluster1_df_genes, df_transcript, by=c("start","end","seqnames") )
+colnames(cluster1_df_genes_tx)[21]= "transcriptId"
+cluster1_df_genes_tx_Annot = merge(cluster1_df_genes_tx, AnnoWithExpression, by="transcriptId" )
+mean(cluster1_df_genes_tx_Annot$low_light_1)
+sd(cluster1_df_genes_tx_Annot$low_light_1)/sqrt(length(cluster1_df_genes_tx_Annot$low_light_1))
 
-CLUSTER1_noskip_df_genes_tx =merge(CLUSTER1_noskip_df_genes, df_transcript, by=c("start","end","seqnames") )
-colnames(CLUSTER1_noskip_df_genes_tx)[21]= "transcriptId"
-CLUSTER1_noskip_df_genes_tx_Annot = merge(CLUSTER1_noskip_df_genes_tx, AnnoWithExpression, by="transcriptId" )
-mean(CLUSTER1_noskip_df_genes_tx_Annot$low_light_1)
-sd(CLUSTER1_noskip_df_genes_tx_Annot$low_light_1)/sqrt(length(CLUSTER1_noskip_df_genes_tx_Annot$low_light_1))
+nrow(cluster1)
+nrow(cluster1_df_genes_tx)
 
-nrow(CLUSTER1_noskip)
-nrow(CLUSTER1_noskip_df_genes_tx)
+write.table(cluster1_df_genes_tx$genes.gene_id,row.names = F, "cluster1.txt")
 
-write.table(CLUSTER1_noskip_df_genes_tx$genes.gene_id,row.names = F, "Cluster1NOSKIP.txt")
+#Analyze mean FPKM in cluster 2
+cluster2=read.table("../06ChIP_klebs/NOSKIPcluster2.txt", header = T)
+nrow(cluster2)
 
-##
-CLUSTER2_noskip=read.table("../06ChIP_klebs/NOSKIPcluster2.txt", header = T)
-nrow(CLUSTER2_noskip)
-getwd()
+colnames(cluster2)[1]="seqnames"
+colnames(cluster2)[2]="start"
+colnames(cluster2)[3]="end"
+cluster2_df_genes= merge(cluster2, df_genes, by=c("start","end","seqnames") )
 
-
-colnames(CLUSTER2_noskip)[1]="seqnames"
-colnames(CLUSTER2_noskip)[2]="start"
-colnames(CLUSTER2_noskip)[3]="end"
-CLUSTER2_noskip_df_genes= merge(CLUSTER2_noskip, df_genes, by=c("start","end","seqnames") )
-
-CLUSTER2_noskip_df_genes_tx =merge(CLUSTER2_noskip_df_genes, df_transcript, by=c("start","end","seqnames") )
-colnames(CLUSTER2_noskip_df_genes_tx)[21]= "transcriptId"
-CLUSTER2_noskip_df_genes_tx_Annot = merge(CLUSTER2_noskip_df_genes_tx, AnnoWithExpression, by="transcriptId" )
-mean(CLUSTER2_noskip_df_genes_tx_Annot$low_light_1)
-sd(CLUSTER2_noskip_df_genes_tx_Annot$low_light_1)/sqrt(length(CLUSTER2_noskip_df_genes_tx_Annot$low_light_1))
+cluster2_df_genes_tx =merge(cluster2_df_genes, df_transcript, by=c("start","end","seqnames") )
+colnames(cluster2_df_genes_tx)[21]= "transcriptId"
+cluster2_df_genes_tx_Annot = merge(cluster2_df_genes_tx, AnnoWithExpression, by="transcriptId" )
+mean(cluster2_df_genes_tx_Annot$low_light_1)
+sd(cluster2_df_genes_tx_Annot$low_light_1)/sqrt(length(cluster2_df_genes_tx_Annot$low_light_1))
 mean(matrix$low_light_1)
 sd(matrix$low_light_1)/sqrt(length(matrix$low_light_1))
 
-write.table(CLUSTER2_noskip_df_genes_tx$genes.gene_id,row.names = F, "Cluster2NOSKIP.txt")
+write.table(cluster2_df_genes_tx$genes.gene_id,row.names = F, "Cluster2NOSKIP.txt")
